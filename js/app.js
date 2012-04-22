@@ -49,9 +49,7 @@ App.Marker = Ember.Object.extend({
 		App.markers.replaceContent(i, 1);
 	},
 	markerClick: function () {
-		console.log(self);
-		console.log("markerClick")
-		App.markers.set('selection', self);
+		App.markers.set('selection', this);
 	}
 });
 
