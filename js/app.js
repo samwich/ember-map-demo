@@ -17,30 +17,48 @@ App.initMap = function () {
   google.maps.event.addListener(App.map, 'click', function(event){
 	  App.mapController.handleClick(event);
   });
-}
+};
 
-App.mapController = {
-	markersForMap: [],
+App.markerView = Em.View.extend({
+	click: function (e) {
+		
+	}
+});
+
+App.markers = Em.ArrayProxy.create({
+	content: []
+});
+
+App.Marker = Ember.Object.extend({
+	latLng: null,
+	lat: function () {return this.latLng.lat()}.property('latLng'),
+	lng: function () {return this.latLng.lng()}.property('latLng'),
+	bar: "bar"
+});
+
+App.mapController = Em.Object.create({
+	markersForMapBinding: "App.markers.content",
 	markersDisplayed: [],
 	handleClick: function (x) {
-		this.addMarker(x.latLng);
+		this.markersForMap.pushObject( App.Marker.create({latLng: x.latLng}) );
 	},
-	addMarker: function (ll) {
-		this.markersForMap.push(ll);
-		this.redrawMarkers();
-	},
-	redrawMarkers: function () {
-		var md = this.markersDisplayed;
+	markersForMapDidChange: function () {
+		var that = this;
 		$.each(this.markersDisplayed, function (i, m) {m.setMap(null);});
 		$.each(this.markersForMap, function  (i, ll) {
 			var marker = new google.maps.Marker({
-				position: ll
+				position: ll.get('latLng')
 			});
-			md.push(marker);
+			that.markersDisplayed.pushObject(marker);
 			marker.setMap(App.map);
 		});
-	}
-}
+	}.observes('markersForMap.@each')
+});
+
+App.ListView = Em.View.extend({
+	contentBinding: "App.markers.content",
+	foo: "foo"
+});
 
 $().ready(function () {
   App.initMap();
