@@ -46,7 +46,7 @@ App.Marker = Ember.Object.extend({
 	longitude: function () {return this.latLng.lng()}.property('latLng'),
 	removeFromMap: function () {
 		i = App.markers.get('content').indexOf(this);
-		App.markers.replaceContent(i, 1);
+		App.markers.removeAt(i);
 	},
 	markerClick: function () {
 		App.markers.set('selection', this);
@@ -72,6 +72,7 @@ App.mapController = Em.Object.create({
 			});
 			that.markersDisplayed.pushObject(marker);
 			marker.setMap(App.map);
+			ll.markerClick();
 		});
 	}.observes('markersForMap.@each')
 });
