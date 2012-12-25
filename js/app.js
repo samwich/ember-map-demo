@@ -1,5 +1,21 @@
 var App = Em.Application.create();
 
+App.ApplicationController = Ember.Controller.extend({
+	contentBinding: 'App.markers',
+	selectionBinding: 'App.markers.selection'
+});
+App.ApplicationView = Ember.View.extend({
+  templateName: 'application'
+});
+
+App.Router = Ember.Router.extend({
+  root: Ember.Route.extend({
+    index: Ember.Route.extend({
+      route: '/'
+    })
+  })
+})
+
 App.initMap = function () {
   var myOptions = {
     center: new google.maps.LatLng(37.871667, -122.272778),
@@ -20,7 +36,6 @@ App.MarkerListItemView = Em.View.extend({
 		return (this.get('content') === App.markers.get('selection'));
 	}.property('App.markers.selection'),
 	click: function () {
-		// console.log('click');
 		App.markers.set('selection', this.get('content'));
 	}
 });
@@ -29,7 +44,8 @@ App.markers = Em.ArrayProxy.create({
 	content: []
 });
 
-App.RemoveButtonView = Ember.Button.extend({
+App.RemoveButtonView = Ember.View.extend({
+	tagName: 'button',
 	click: function () {
 		this.get('content').removeFromMap();
 		this.set('content', null);
@@ -81,6 +97,8 @@ App.ListView = Em.View.extend({
 	contentBinding: "App.markers.content"
 });
 
-$().ready(function () {
+App.ready = function () {
   App.initMap();
-});
+};
+
+App.initialize();

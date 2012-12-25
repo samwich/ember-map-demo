@@ -24,29 +24,29 @@
 </head>
 <body>
   <div id="map_canvas" style="width:100%; height:400px"></div>
-
-  <script type="text/x-handlebars">
+  <hr>
+  <script type="text/x-handlebars" data-template-name="application">
   {{#view App.MarkerDetailView}}
   <table>
   <tr>
-  <td>{{content.latitude}}</td>
-  <td>{{content.longitude}}</td>
+  <td>{{selection.latitude}}</td>
+  <td>{{selection.longitude}}</td>
   <td>
-  {{#if content}}
-  {{#view App.RemoveButtonView contentBinding="content"}}Remove{{/view}}
+  {{#if selection}}
+  {{#view App.RemoveButtonView contentBinding="selection"}}Remove{{/view}}
   {{/if}}
   </td>
   </tr>
   </table>
   {{/view}}
-  <br>
+  <hr>
   {{#view App.ListView}}
   <table>
   <tr><th>Latitude</th><th>Longitude</th></tr>
     {{#each content}}
     {{#view App.MarkerListItemView contentBinding="this"}}
-    <td>{{content.latitude}}</td>
-    <td>{{content.longitude}}</td>
+    <td>{{latitude}}</td>
+    <td>{{longitude}}</td>
     {{/view}}
     {{/each}}
   </table>
@@ -56,7 +56,8 @@
   <!-- The missing protocol means that it will match the current protocol, either http or https. If running locally, we use the local jQuery. -->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.2.min.js"><\/script>')</script>
-  <script src="js/libs/ember-0.9.7.1.min.js"></script>
+  <script src="js/libs/handlebars-1.0.0.beta.6.js"></script>
+  <script src="js/libs/ember-1.0.0-pre.2.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

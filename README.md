@@ -9,6 +9,7 @@ A Google Map with a list of locations linked together with Ember.js and Mustache
   * Select a location in the list or click a marker and its details will be shown.
   * Supports deleting locations.
   * Locations are not persisted to a web service.
+  * Code is rather ugly :-) Send me a pull request!
 
 MIT License, like Ember. http://opensource.org/licenses/mit-license.php
 
