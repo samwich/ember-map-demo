@@ -73,9 +73,7 @@ App.mapController = Ember.Object.extend({
 	markersForMapBinding: "App.markers.content",
 	markersDisplayed: [],
 	handleClick: function (x) {
-		console.log("Before " + this.markersForMap);
 		this.markersForMap.pushObject( App.Marker.create({latLng: x.latLng}) );
-		console.log("After " + this.markersForMap);
 	},
 	markersForMapDidChange: function () {
 		var that = this;
