@@ -14,6 +14,7 @@
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="stylesheet" href="css/style.css?v=2">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
 
   <!--[if lt IE 9]>
   <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -27,7 +28,7 @@
   <hr>
   <script type="text/x-handlebars" data-template-name="application">
   {{#view App.MarkerDetailView}}
-  <table>
+  <table class="table striped">
   <tr>
   <td>{{selection.latitude}}</td>
   <td>{{selection.longitude}}</td>
@@ -54,10 +55,10 @@
   </script>
 
   <!-- The missing protocol means that it will match the current protocol, either http or https. If running locally, we use the local jQuery. -->
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-  <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.2.min.js"><\/script>')</script>
-  <script src="js/libs/handlebars-1.0.0.beta.6.js"></script>
-  <script src="js/libs/ember-1.0.0-pre.2.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="js/libs/jquery-1.9.1.js"><\/script>')</script>
+  <script src="js/libs/handlebars-1.0.0.js"></script>
+  <script src="js/libs/ember-1.0.0-rc.7.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

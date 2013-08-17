@@ -25,7 +25,7 @@ App.initMap = function () {
   App.map = new google.maps.Map($("#map_canvas")[0],
       myOptions);
   google.maps.event.addListener(App.map, 'click', function(event){
-	  App.mapController.handleClick(event);
+	  App.mapController.create().handleClick(event);
   });
 };
 
@@ -69,11 +69,13 @@ App.Marker = Ember.Object.extend({
 	}
 });
 
-App.mapController = Em.Object.create({
+App.mapController = Ember.Object.extend({
 	markersForMapBinding: "App.markers.content",
 	markersDisplayed: [],
 	handleClick: function (x) {
+		console.log("Before " + this.markersForMap);
 		this.markersForMap.pushObject( App.Marker.create({latLng: x.latLng}) );
+		console.log("After " + this.markersForMap);
 	},
 	markersForMapDidChange: function () {
 		var that = this;
