@@ -1,64 +1,53 @@
-<!doctype html>
-<!--[if lt IE 7 ]> <html lang="en" class="ie6"> <![endif]--> <!--[if IE 7 ]>    <html lang="en" class="ie7"> <![endif]--> <!--[if IE 8 ]>    <html lang="en" class="ie8"> <![endif]--> <!--[if IE 9 ]>    <html lang="en" class="ie9"> <![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en"> <!--<![endif]-->
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-
-  <title></title>
-  <meta name="description" content="">
-  <meta name="author" content="">
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <link rel="shortcut icon" href="/favicon.ico">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <link rel="stylesheet" href="css/style.css?v=2">
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-
-  <!--[if lt IE 9]>
-  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
-  <script type="text/javascript"
-    src="http://maps.googleapis.com/maps/api/js?sensor=false">
-  </script>
+<meta charset="utf-8"/>
+<title>Ember Starter Kit</title>
+  <link rel="stylesheet" href="../css/normalize.css"/>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link href="css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-  <div id="map_canvas" style="width:100%; height:400px"></div>
-  <hr>
-  <script type="text/x-handlebars" data-template-name="application">
-  {{#view App.MarkerDetailView}}
-  <table class="table striped">
-  <tr>
-  <td>{{selection.latitude}}</td>
-  <td>{{selection.longitude}}</td>
-  <td>
-  {{#if selection}}
-  {{#view App.RemoveButtonView contentBinding="selection"}}Remove{{/view}}
-  {{/if}}
-  </td>
-  </tr>
-  </table>
-  {{/view}}
-  <hr>
-  {{#view App.ListView}}
-  <table>
-  <tr><th>Latitude</th><th>Longitude</th></tr>
-    {{#each content}}
-    {{#view App.MarkerListItemView contentBinding="this"}}
-    <td>{{latitude}}</td>
-    <td>{{longitude}}</td>
-    {{/view}}
-    {{/each}}
-  </table>
-  {{/view}}
+
+  <script type="text/x-handlebars">
+    {{outlet}}
   </script>
 
-  <!-- The missing protocol means that it will match the current protocol, either http or https. If running locally, we use the local jQuery. -->
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>window.jQuery || document.write('<script src="js/libs/jquery-1.9.1.js"><\/script>')</script>
+  <script type="text/x-handlebars" data-template-name="index">
+    {{#view App.MapView}}{{/view}}
+    <hr/>
+
+    <p>Nr of records selected = {{selectedMarkerCounter}}
+    <button {{action 'removeSelectedMarkers'}}>Remove selected markers</button>
+    </p>
+
+    <table class="table striped">
+      <tr>
+        <th>Selected</td>
+        <th>Latitude</td>
+        <th>Longitude</td>
+      </tr>
+
+    {{#each controller itemController="marker"}}
+        <tr {{bindAttr class="selected:warning"}}>
+          <td>{{view Ember.Checkbox checkedBinding="selected"}}</td>
+          <td>{{lat}}</td>
+          <td>{{lng}}</td>
+        </tr>
+    {{/each}}
+
+    </table>
+
+  </script>
+
+  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+  <script src="js/libs/jquery-1.9.1.js"></script>
+  <script src="js/libs/bootstrap.js"></script>
   <script src="js/libs/handlebars-1.0.0.js"></script>
   <script src="js/libs/ember-1.0.0-rc.7.js"></script>
   <script src="js/app.js"></script>
+
 </body>
+
+
 </html>
