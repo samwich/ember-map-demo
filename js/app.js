@@ -17,8 +17,6 @@ App.MapView = Ember.View.extend({
   
   map:null,
 
-  markers:[],
-  
   didInsertElement: function() {
     var mapOptions = {
       center: new google.maps.LatLng(37.871667, -122.272778),
@@ -60,9 +58,6 @@ App.MapView = Ember.View.extend({
       });
 
       //markerObject.set("selected",true);
-
-      // store the google marker object on this view. 
-      that.get("markers").pushObject(marker);
 
       // Instruct the controller that the marker was added.
       controller.addMarker(markerObject);
