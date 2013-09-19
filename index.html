@@ -3,8 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <title>Ember Starter Kit</title>
-  <link rel="stylesheet" href="../css/normalize.css"/>
-  <link rel="stylesheet" href="../css/style.css"/>
+  <link rel="stylesheet" href="css/style.css"/>
   <link href="css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -14,7 +13,7 @@
   </script>
 
   <script type="text/x-handlebars" data-template-name="index">
-    {{#view App.MapView}}{{/view}}
+    {{#view App.MapView contentBinding="this"}}{{/view}}
     <hr/>
 
     <p>Nr of records selected = {{selectedMarkerCounter}}
@@ -28,7 +27,7 @@
         <th>Longitude</td>
       </tr>
 
-    {{#each controller itemController="marker"}}
+    {{#each}}
         <tr {{bindAttr class="selected:warning"}}>
           <td>{{view Ember.Checkbox checkedBinding="selected"}}</td>
           <td>{{lat}}</td>
