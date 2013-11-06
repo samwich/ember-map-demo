@@ -83,7 +83,7 @@ App.MapView = Ember.View.extend({
 App.IndexController = Ember.ArrayController.extend({
   content: [],
   
-  // We add the markr to the ArrayControllers content.
+  // We add the marker to the ArrayControllers content.
   addMarker: function (marker) {
     this.content.pushObject(marker);
   },
