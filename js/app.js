@@ -4,16 +4,59 @@ App.Router.map(function() {
   // put your routes here
 });
 
-App.Marker = Ember.Object.extend({
+App.Event = Ember.Object.extend({});
+
+App.EventController = Ember.ObjectController.extend({
+  selected: false,
+  eltSelected: function(){
+    this.set("selected",!this.get("selected"));
+  },
 });
 
+App.MarkerView = Ember.View.extend({
 
-App.MapView = Ember.View.extend({
+  marker: null,
+
+  setup : function(mapEvent,eventCont,mapView){
+    console.log("setting up")
+    console.log(this.get('content'))
+    var marker = new google.maps.Marker({
+        position: mapEvent.latLng
+    });
+    this.set("marker",marker);
+    marker.setMap(mapView.get("map"));
+    this.set("controller", eventCont);
+
+    var that=this;
+    google.maps.event.addListener(marker, 'click', function() {
+        console.log("controller:")
+        that.get("controller").eltSelected();
+    });
+  },
+  markerIcon: function() {
+        if (this.get("controller").get("selected")) {
+          this.get("marker").setIcon("http://maps.google.com/mapfiles/ms/icons/green-dot.png");
+        } else {
+          this.get("marker").setIcon("http://maps.google.com/mapfiles/ms/icons/red-dot.png");
+        }
+  }.observes("controller.selected"),
+
+  removed: function(){
+    if(this.get("controller").get("model").get("removed")){
+      this.marker.setMap(null);
+      this.get("parentView").removeObject(this);
+    }
+  }.observes("controller.content.removed")
+
+})
+
+App.MapView = Ember.ContainerView.extend({
+
   id: 'map_canvas',
   tagName: 'div',
 
   attributeBindings: ['style'],
-  style:"width:50%; height:200px",
+  style:"width:75%; height:300px",
   
   map:null,
 
@@ -23,10 +66,7 @@ App.MapView = Ember.View.extend({
       zoom: 13,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
-
-    var controller = this.get("controller");
     var map = new google.maps.Map(this.$().get(0),mapOptions);
-    
     this.set("map",map);
     
     var that = this;
@@ -35,59 +75,32 @@ App.MapView = Ember.View.extend({
     // The controller handles the marker management.
     // The view handles placing the marker on the map.
     google.maps.event.addListener(map, 'click', function(event){
-     
-
-      // at first I had this code here... but the MarkerController takes care of it now.
-      // when adding a new marker, all markers are reset to a red icon. 
-      // $.each(that.get("markers"), function (i, m) {
-      //   m.setIcon("http://maps.google.com/mapfiles/ms/icons/red-dot.png");
-      // });
-
-      // the newly added marker gets a green color (selected marker)
-      var marker = new google.maps.Marker({
-        position: event.latLng,
-        //icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
-        //animation: google.maps.Animation.DROP
-      });
-
-      // create a new marker object containing the lat,lng and the googleMarker
-      var markerObject = App.Marker.create({
-                            lat: event.latLng.lat(),
-                            lng: event.latLng.lng(),
-                            googleMarker: marker
-      });
-
-      //markerObject.set("selected",true);
-
-      // Instruct the controller that the marker was added.
-      controller.addMarker(markerObject);
-
-      google.maps.event.addListener(marker, 'click', function() {
-        controller.markerClick(markerObject);
-      });
-
-      marker.setMap(that.get("map"));
-      
+      eventCont= that.get("controller").addEvent(event.latLng.lat(), event.latLng.lng());
+      child = App.MarkerView.create();
+      child.setup(event, eventCont,that);
+      that.pushObject(child);
     });
   }
 });
 
 // This is our main array controller that does the marker management
 // It keeps a list of marker objects in its content
-
 App.IndexController = Ember.ArrayController.extend({
   content: [],
   
   // We add the marker to the ArrayControllers content.
-  addMarker: function (marker) {
-    this.content.pushObject(marker);
-  },
+  addEvent: function (lat,lng) {
+    // create a new marker object containing the lat,lng and the googleMarker
+    var eventObject = App.Event.create({
+                            lat: lat,
+                            lng: lng
+    });
 
-  // When clicking on a marker, we toggle the selected state.  
-  markerClick: function(marker) {
-    marker.set("selected",!marker.get("selected"));
+    eventController = App.EventController.create();
+    eventController.set('model',eventObject);
+    this.content.pushObject(eventController);
+    return eventController;
   },
-
 
   // This property simply displays the number of selected markers.
   selectedMarkerCounter: function () {
@@ -100,35 +113,12 @@ App.IndexController = Ember.ArrayController.extend({
     if (arr.length==0) {
         output = "nothing selected";
     } else { 
-        output = "";
-
-        var toBeRemoved = [];
-
         for (var i = arr.length -1; i >= 0; i--) {
-            toBeRemoved.push(arr[i]);
+          arr[i].get("model").set("removed",true);
+          this.content.removeObject(arr[i]);
         }
-
-        for (var i = toBeRemoved.length -1; i >= 0; i--) {
-          toBeRemoved[i].googleMarker.setMap(null);
-          this.content.removeObject(toBeRemoved[i]);
-        }
-
     }
-  },
-
-  // This is called when our content changes (markers added or removed).
-  // in this case we highlight the last marker. (should do this differently)
-  // highLightSelectedMarkers: function() {
-
-  //   $.each(this.content, function (i, m) {
-  //       m.set("selected",false);
-  //   });
-
-  //   if (this.content.length>0) {
-  //     this.content[this.content.length-1].set("selected",true);
-  //   }
-
-  // }.observes('content.@each')
+  }
 });
 
 // we need to have an item-controller in place....
