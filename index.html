@@ -8,16 +8,21 @@
 </head>
 <body>
 
-  <script type="text/x-handlebars">
-    {{outlet}}
+  <script type="text/x-handlebars" data-template-name="index">
+    {{render 'events'}}
   </script>
 
-  <script type="text/x-handlebars" data-template-name="index">
+
+
+  <script type="text/x-handlebars" data-template-name="events">
+    <div id="map_canvas"></div>
     {{#view App.MapView contentBinding="this"}}{{/view}}
     <hr/>
 
-    <p>Nr of records selected = {{selectedMarkerCounter}}
-    <button {{action 'removeSelectedMarkers'}}>Remove selected markers</button>
+
+    <p>Nr of records selected = {{selectedCounter}}
+
+    <button {{action 'removeSelected'}}>Remove selected events</button>
     </p>
 
     <table class="table striped">
